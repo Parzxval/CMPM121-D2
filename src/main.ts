@@ -2,7 +2,7 @@ import "./style.css";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 
-const title = document.createElement("hi");
+const title = document.createElement("h1");
 title.textContent = "3d Sketchbook";
 
 //Wrapper for canvas and toolbar
@@ -28,6 +28,13 @@ let prevX = 0;
 let prevY = 0;
 
 canvas.addEventListener("pointerdown", (event) => {
+  isDrawing = true;
+  canvas.setPointerCapture(event.pointerId);
+  prevX = event.offsetX;
+  prevY = event.offsetY;
+});
+
+canvas.addEventListener("pointermove", (event) => {
   if (isDrawing === false) {
     return;
   }
@@ -45,11 +52,11 @@ canvas.addEventListener("pointerdown", (event) => {
 
   prevX = event.offsetX;
   prevY = event.offsetY;
-
-  function endStroke() {
-    isDrawing = false;
-  }
-
-  canvas.addEventListener("pointerup", endStroke);
-  canvas.addEventListener("pointercancel", endStroke);
 });
+
+function endStroke() {
+  isDrawing = false;
+}
+
+canvas.addEventListener("pointerup", endStroke);
+canvas.addEventListener("pointercancel", endStroke);
