@@ -133,3 +133,48 @@ clearButton.addEventListener("click", () => {
   redraw();
 });
 toolbar.append(clearButton);
+
+//store list of undos
+const redoStack: DrawCmd[] = [];
+
+function undo() {
+  if (commands.length === 0) {
+    return;
+  }
+  const cmd = commands.pop()!;
+  redoStack.push(cmd);
+  redraw();
+  updateButtons();
+}
+
+function redo() {
+  if (redoStack.length === 0) {
+    return;
+  }
+  const cmd = redoStack.pop()!;
+  commands.push(cmd);
+  redraw();
+  updateButtons();
+}
+
+//undo button
+const undoButton = document.createElement("button");
+undoButton.textContent = "Undo";
+undoButton.addEventListener("click", undo);
+toolbar.append(undoButton);
+
+//redo button
+const redoButton = document.createElement("button");
+redoButton.textContent = "Redo";
+redoButton.addEventListener("click", redo);
+toolbar.append(redoButton);
+
+//disable undo and redo if there is nothing in stack
+function updateButtons() {
+  if (commands.length === 0) {
+    undoButton.disabled;
+  }
+  if (redoStack.length === 0) {
+    redoButton.disabled;
+  }
+}
