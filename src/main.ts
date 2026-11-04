@@ -63,5 +63,26 @@ class MarkerStroke implements DrawCmd {
     for (let i = 0; i < this.points.length; i++) {
       ctx.lineTo(this.points[i].x, this.points[i].y);
     }
+
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+//create an array to store each drawing mark
+const commands: DrawCmd[] = [];
+
+//Recreates all marks so that canvas marks can be later exported
+// deno-lint-ignore no-unused-vars
+function render(
+  target: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+) {
+  target.fillStyle = "white";
+  target.fillRect(0, 0, width, height);
+
+  for (let i = 0; i < commands.length; i++) {
+    commands[i].display(target);
   }
 }
