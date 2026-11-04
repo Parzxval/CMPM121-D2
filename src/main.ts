@@ -126,7 +126,7 @@ canvas.addEventListener("pointercancel", () => {
 });
 
 //Button to clear canvas
-const clearButton = document.createElement("Button");
+const clearButton = document.createElement("button");
 clearButton.textContent = "Clear";
 clearButton.addEventListener("click", () => {
   commands.length = 0;
