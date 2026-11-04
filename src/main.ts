@@ -19,7 +19,7 @@ toolbar.className = "toolbar";
 layout.append(canvas, toolbar);
 app.append(title, layout);
 
-const _ctx = canvas.getContext("2d")!;
+const ctx = canvas.getContext("2d")!;
 
 interface Point {
   x: number;
@@ -73,7 +73,6 @@ class MarkerStroke implements DrawCmd {
 const commands: DrawCmd[] = [];
 
 //Recreates all marks so that canvas marks can be later exported
-// deno-lint-ignore no-unused-vars
 function render(
   target: CanvasRenderingContext2D,
   width: number,
@@ -86,3 +85,9 @@ function render(
     commands[i].display(target);
   }
 }
+
+function redraw() {
+  render(ctx, canvas.width, canvas.height);
+}
+
+redraw();
