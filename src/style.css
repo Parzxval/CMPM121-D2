@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+}
+
+.layout {
+  display: flex; /*canvas and toolbar displayed in a row*/
+  gap: 16px;
+  padding: 16px;
+}
+
+canvas {
+  background: white;
+  border: 1px;
+  cursor: crosshair;
+}
+
+.toolbar {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
