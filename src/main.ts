@@ -19,44 +19,49 @@ toolbar.className = "toolbar";
 layout.append(canvas, toolbar);
 app.append(title, layout);
 
-const ctx = canvas.getContext("2d")!;
-ctx.fillStyle = "white";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+const _ctx = canvas.getContext("2d")!;
 
-let isDrawing = false;
-let prevX = 0;
-let prevY = 0;
-
-canvas.addEventListener("pointerdown", (event) => {
-  isDrawing = true;
-  canvas.setPointerCapture(event.pointerId);
-  prevX = event.offsetX;
-  prevY = event.offsetY;
-});
-
-canvas.addEventListener("pointermove", (event) => {
-  if (isDrawing === false) {
-    return;
-  }
-
-  //default pen settings for now
-  ctx.strokeStyle = "black";
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-
-  ctx.beginPath();
-  ctx.moveTo(prevX, prevY);
-  ctx.lineTo(event.offsetX, event.offsetY);
-  ctx.stroke();
-
-  prevX = event.offsetX;
-  prevY = event.offsetY;
-});
-
-function endStroke() {
-  isDrawing = false;
+interface Point {
+  x: number;
+  y: number;
 }
 
-canvas.addEventListener("pointerup", endStroke);
-canvas.addEventListener("pointercancel", endStroke);
+//an interface will allow for brushstrokes, stamps, and lines to be drawn
+interface DrawCmd {
+  display(ctx: CanvasRenderingContext2D): void;
+}
+
+// deno-lint-ignore no-unused-vars
+class MarkerStroke implements DrawCmd {
+  private points: Point[] = [];
+  private color: string;
+  private width: number;
+
+  constructor(start: Point, color: string, width: number) {
+    this.points.push(start);
+    this.color = color;
+    this.width = width;
+  }
+
+  drag(pt: Point) {
+    this.points.push(pt);
+  }
+
+  display(ctx: CanvasRenderingContext2D): void {
+    ctx.save();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.width;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(this.points[0].x, this.points[0].y);
+
+    if (this.points.length === 1) {
+      ctx.lineTo(this.points[0].x + 0.01, this.points[0].y); //click creates a dot
+    }
+    for (let i = 0; i < this.points.length; i++) {
+      ctx.lineTo(this.points[i].x, this.points[i].y);
+    }
+  }
+}
