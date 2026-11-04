@@ -31,7 +31,6 @@ interface DrawCmd {
   display(ctx: CanvasRenderingContext2D): void;
 }
 
-// deno-lint-ignore no-unused-vars
 class MarkerStroke implements DrawCmd {
   private points: Point[] = [];
   private color: string;
@@ -91,3 +90,46 @@ function redraw() {
 }
 
 redraw();
+
+let currentStroke: MarkerStroke | null = null;
+
+canvas.addEventListener("pointerdown", (event) => {
+  canvas.setPointerCapture(event.pointerId);
+  currentStroke = new MarkerStroke(
+    { x: event.offsetX, y: event.offsetY },
+    "black",
+    2,
+  );
+  commands.push(currentStroke);
+  redraw();
+});
+
+canvas.addEventListener("pointermove", (event) => {
+  if (currentStroke === null) {
+    return;
+  }
+  currentStroke.drag({ x: event.offsetX, y: event.offsetY });
+  redraw();
+});
+
+canvas.addEventListener("pointerup", () => {
+  currentStroke = null;
+});
+
+//throw away stroke on browser interrupt
+canvas.addEventListener("pointercancel", () => {
+  if (currentStroke !== null) {
+    commands.splice(commands.indexOf(currentStroke), 1);
+    currentStroke = null;
+    redraw();
+  }
+});
+
+//Button to clear canvas
+const clearButton = document.createElement("Button");
+clearButton.textContent = "Clear";
+clearButton.addEventListener("click", () => {
+  commands.length = 0;
+  redraw();
+});
+toolbar.append(clearButton);
