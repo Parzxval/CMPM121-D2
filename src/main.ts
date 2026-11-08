@@ -31,7 +31,12 @@ interface DrawCmd {
   display(ctx: CanvasRenderingContext2D): void;
 }
 
-class MarkerStroke implements DrawCmd {
+//functionality for dragging while placing line (straight line tool)
+interface DragCmd extends DrawCmd {
+  drag(pt: Point): void;
+}
+
+class MarkerStroke implements DragCmd {
   private points: Point[] = [];
   private color: string;
   private width: number;
@@ -63,6 +68,39 @@ class MarkerStroke implements DrawCmd {
       ctx.lineTo(this.points[i].x, this.points[i].y);
     }
 
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+//straight line tool from point where pressed to point where released
+// deno-lint-ignore no-unused-vars
+class StraightLine implements DragCmd {
+  private start: Point;
+  private end: Point;
+  private color: string;
+  private size: number;
+
+  constructor(start: Point, color: string, size: number) {
+    this.start = start;
+    this.end = start; //if user doesn't drag, end = start and so only a point is drawn
+    this.color = color;
+    this.size = size;
+  }
+
+  drag(pt: Point): void {
+    this.end = pt; //end moves dynamically with drag motion
+  }
+
+  display(ctx: CanvasRenderingContext2D): void {
+    ctx.save();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.size;
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(this.start.x, this.start.y);
+    ctx.lineTo(this.end.x, this.end.y);
     ctx.stroke();
     ctx.restore();
   }
@@ -106,7 +144,7 @@ const tools: ToolDef[] = [
 let currentTool: ToolDef = tools[0];
 let currentSize = currentTool.size;
 // deno-lint-ignore prefer-const
-let currentColor = "000000";
+let currentColor = "#000000";
 
 let currentStroke: MarkerStroke | null = null;
 
