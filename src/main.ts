@@ -113,6 +113,13 @@ class StraightLine implements DragCmd {
   }
 }
 
+//drawing helper used by presets and custom images
+type StampDraw = (
+  ctx: CanvasRenderingContext2D,
+  size: number,
+  color: string,
+) => void;
+
 //create an array to store each drawing mark
 const commands: DrawCmd[] = [];
 
