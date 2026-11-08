@@ -171,10 +171,8 @@ toolbar.append(redoButton);
 
 //disable undo and redo if there is nothing in stack
 function updateButtons() {
-  if (commands.length === 0) {
-    undoButton.disabled;
-  }
-  if (redoStack.length === 0) {
-    redoButton.disabled;
-  }
+  undoButton.disabled = commands.length === 0;
+  redoButton.disabled = redoStack.length === 0;
 }
+
+updateButtons();
