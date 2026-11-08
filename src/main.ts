@@ -12,7 +12,7 @@ const app = document.querySelector<HTMLElement>("#app")!;
 const title = document.createElement("h1");
 title.textContent = "3d Sketchbook";
 
-//Wrapp er for canvas and toolbar
+//Wrapper for canvas and toolbar
 const layout = document.createElement("div");
 layout.className = "layout";
 
