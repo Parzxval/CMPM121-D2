@@ -45,3 +45,28 @@ function project(corner: number[], size: number): { x: number; y: number } {
     y: ((x + y) * SIN_A - z) * size,
   };
 }
+
+//function that draws any preset shape
+function drawShape(
+  ctx: CanvasRenderingContext2D,
+  shape: Shape3D,
+  size: number,
+  color: string,
+) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+
+  for (let i = 0; i < shape.length; i++) {
+    const line = shape[i];
+    const first = project(line[0], size);
+    ctx.beginPath();
+    ctx.moveTo(first.x, first.y);
+
+    for (let a = 1; a < line.length; a++) {
+      const pt = project(line[a], size);
+      ctx.lineTo(pt.x, pt.y);
+    }
+    ctx.stroke();
+  }
+}
