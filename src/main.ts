@@ -172,8 +172,9 @@ redraw();
 //interface to create different tools based on tool data
 interface ToolDef {
   label: string; //button label
-  kind: "marker" | "line";
+  kind: "marker" | "line" | "stamp";
   size: number;
+  draw?: StampDraw;
 }
 
 const tools: ToolDef[] = [
@@ -181,6 +182,32 @@ const tools: ToolDef[] = [
   { label: "Thick", kind: "marker", size: 8 },
   { label: "Thin Line", kind: "line", size: 2 },
   { label: "Thick Line", kind: "line", size: 8 },
+
+  //stamps
+  {
+    label: "Perspective Stamp",
+    kind: "stamp",
+    size: 80,
+    draw: (ctx, size, color) => drawShape(ctx, GUIDE_SHAPE, size, color),
+  },
+  {
+    label: "Cube Stamp",
+    kind: "stamp",
+    size: 60,
+    draw: (ctx, size, color) => drawShape(ctx, CUBE_SHAPE, size, color),
+  },
+  {
+    label: "Ramp Stamp",
+    kind: "stamp",
+    size: 60,
+    draw: (ctx, size, color) => drawShape(ctx, RAMP_SHAPE, size, color),
+  },
+  {
+    label: "Half-Cube Stamp",
+    kind: "stamp",
+    size: 60,
+    draw: (ctx, size, color) => drawShape(ctx, HALF_CUBE_SHAPE, size, color),
+  },
 ];
 
 let currentTool: ToolDef = tools[0];
