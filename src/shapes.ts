@@ -15,8 +15,15 @@ const GUIDE_SHAPE: Shape3D = [
   [[0, 0, 0], [0, 0, 1]], //wall corner going up in middle
 ];
 
+//3D cube stamp
 const CUBE_SHAPE: Shape3D = [
   [[0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1], [0, 0, 1]], //top face
   [[1, 0, 1], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]], //sides and bottom
   [[1, 1, 0], [1, 1, 1]], //front corner edge
+];
+
+//Ramp 3d stamp; half of the cube stamp cut diagonally
+const RAMP_SHAPE: Shape3D = [
+  [[0, 0, 1], [0, 1, 1], [1, 1, 0], [1, 0, 0], [0, 0, 1]], //slanted face
+  [[0, 1, 1], [0, 1, 0], [1, 1, 0]], //triangle in front
 ];
