@@ -27,3 +27,10 @@ const RAMP_SHAPE: Shape3D = [
   [[0, 0, 1], [0, 1, 1], [1, 1, 0], [1, 0, 0], [0, 0, 1]], //slanted face
   [[0, 1, 1], [0, 1, 0], [1, 1, 0]], //triangle in front
 ];
+
+//Rectangular prism stamp; half the cube's height
+const HALF_CUBE_SHAPE: Shape3D = [
+  [[0, 0, 0.5], [1, 0, 0.5], [1, 1, 0.5], [0, 1, 0.5], [0, 0, 0.5]],
+  [[1, 0, 0.5], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, 0.5]],
+  [[1, 1, 0], [1, 1, 0.5]],
+];
