@@ -104,10 +104,8 @@ const tools: ToolDef[] = [
 ];
 
 let currentTool: ToolDef = tools[0];
-// deno-lint-ignore no-unused-vars
 let currentSize = currentTool.size;
-
-// deno-lint-ignore prefer-const no-unused-vars
+// deno-lint-ignore prefer-const
 let currentColor = "000000";
 
 let currentStroke: MarkerStroke | null = null;
@@ -116,8 +114,8 @@ canvas.addEventListener("pointerdown", (event) => {
   canvas.setPointerCapture(event.pointerId);
   currentStroke = new MarkerStroke(
     { x: event.offsetX, y: event.offsetY },
-    "black",
-    2,
+    currentColor,
+    currentSize,
   );
   commands.push(currentStroke);
   redraw();
