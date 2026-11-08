@@ -147,8 +147,7 @@ let currentSize = currentTool.size;
 let currentColor = "#000000";
 
 //creates the corresponding mark for the selected tool
-// deno-lint-ignore no-unused-vars
-function createMark(start: Point): DragCmd {
+function createStroke(start: Point): DragCmd {
   if (currentTool.kind === "line") {
     return new StraightLine(start, currentColor, currentSize);
   }
@@ -159,11 +158,7 @@ let currentStroke: DragCmd | null = null;
 
 canvas.addEventListener("pointerdown", (event) => {
   canvas.setPointerCapture(event.pointerId);
-  currentStroke = new MarkerStroke(
-    { x: event.offsetX, y: event.offsetY },
-    currentColor,
-    currentSize,
-  );
+  currentStroke = createStroke({ x: event.offsetX, y: event.offsetY });
   commands.push(currentStroke);
   redraw();
 });
