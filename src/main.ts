@@ -64,7 +64,7 @@ class MarkerStroke implements DragCmd {
     if (this.points.length === 1) {
       ctx.lineTo(this.points[0].x + 0.01, this.points[0].y); //click creates a dot
     }
-    for (let i = 0; i < this.points.length; i++) {
+    for (let i = 1; i < this.points.length; i++) {
       ctx.lineTo(this.points[i].x, this.points[i].y);
     }
 
@@ -74,7 +74,6 @@ class MarkerStroke implements DragCmd {
 }
 
 //straight line tool from point where pressed to point where released
-// deno-lint-ignore no-unused-vars
 class StraightLine implements DragCmd {
   private start: Point;
   private end: Point;
@@ -132,19 +131,29 @@ redraw();
 //interface to create different tools based on tool data
 interface ToolDef {
   label: string; //button label
-  kind: "marker";
+  kind: "marker" | "line";
   size: number;
 }
 
 const tools: ToolDef[] = [
   { label: "Thin", kind: "marker", size: 2 },
   { label: "Thick", kind: "marker", size: 8 },
+  { label: "line", kind: "line", size: 2 },
 ];
 
 let currentTool: ToolDef = tools[0];
 let currentSize = currentTool.size;
 // deno-lint-ignore prefer-const
 let currentColor = "#000000";
+
+//creates the corresponding mark for the selected tool
+// deno-lint-ignore no-unused-vars
+function createMark(start: Point): DragCmd {
+  if (currentTool.kind === "line") {
+    return new StraightLine(start, currentColor, currentSize);
+  }
+  return new MarkerStroke(start, currentColor, currentSize);
+}
 
 let currentStroke: MarkerStroke | null = null;
 
