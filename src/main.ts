@@ -155,7 +155,7 @@ function createMark(start: Point): DragCmd {
   return new MarkerStroke(start, currentColor, currentSize);
 }
 
-let currentStroke: MarkerStroke | null = null;
+let currentStroke: DragCmd | null = null;
 
 canvas.addEventListener("pointerdown", (event) => {
   canvas.setPointerCapture(event.pointerId);
