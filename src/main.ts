@@ -138,7 +138,8 @@ interface ToolDef {
 const tools: ToolDef[] = [
   { label: "Thin", kind: "marker", size: 2 },
   { label: "Thick", kind: "marker", size: 8 },
-  { label: "Line", kind: "line", size: 2 },
+  { label: "Thin Line", kind: "line", size: 2 },
+  { label: "Thick Line", kind: "line", size: 8 },
 ];
 
 let currentTool: ToolDef = tools[0];
