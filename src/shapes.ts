@@ -14,3 +14,9 @@ const GUIDE_SHAPE: Shape3D = [
   [[1, 0, 0], [0, 0, 0], [0, 1, 0]], //two lines for floor
   [[0, 0, 0], [0, 0, 1]], //wall corner going up in middle
 ];
+
+const CUBE_SHAPE: Shape3D = [
+  [[0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1], [0, 0, 1]], //top face
+  [[1, 0, 1], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]], //sides and bottom
+  [[1, 1, 0], [1, 1, 1]], //front corner edge
+];
