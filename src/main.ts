@@ -1,11 +1,19 @@
+// deno-lint-ignore-file no-unused-vars
 import "./style.css";
+import {
+  CUBE_SHAPE,
+  drawShape,
+  GUIDE_SHAPE,
+  HALF_CUBE_SHAPE,
+  RAMP_SHAPE,
+} from "./shapes.ts";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 
 const title = document.createElement("h1");
 title.textContent = "3d Sketchbook";
 
-//Wrapper for canvas and toolbar
+//Wrapp er for canvas and toolbar
 const layout = document.createElement("div");
 layout.className = "layout";
 

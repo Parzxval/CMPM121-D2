@@ -1,7 +1,6 @@
 //3D shape stamps; floor lines are 30 degrees below horizontal for all
 //changing FLOOR_ANGLE will tilt the shape stamps and guide stamp together
 //TODO: Add an angle slider for FLOOR_ANGLE
-// deno-lint-ignore-file no-unused-vars
 const FLOOR_ANGLE = Math.PI / 6;
 const COS_A = Math.cos(FLOOR_ANGLE);
 const SIN_A = Math.sin(FLOOR_ANGLE);
@@ -47,7 +46,7 @@ function project(corner: number[], size: number): { x: number; y: number } {
 }
 
 //function that draws any preset shape
-function drawShape(
+export function drawShape(
   ctx: CanvasRenderingContext2D,
   shape: Shape3D,
   size: number,
