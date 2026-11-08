@@ -113,7 +113,12 @@ canvas.addEventListener("pointermove", (event) => {
 });
 
 canvas.addEventListener("pointerup", () => {
+  if (currentStroke === null) {
+    return;
+  }
+  redoStack.length = 0; //reset branch for a new line drawing
   currentStroke = null;
+  updateButtons();
 });
 
 //throw away stroke on browser interrupt
