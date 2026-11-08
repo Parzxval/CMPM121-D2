@@ -120,6 +120,32 @@ type StampDraw = (
   color: string,
 ) => void;
 
+//drag to move stamp, release to place stamp
+class StampMark implements DragCmd {
+  private pos: Point;
+  private draw: StampDraw;
+  private color: string;
+  private size: number;
+
+  constructor(pos: Point, draw: StampDraw, color: string, size: number) {
+    this.pos = pos;
+    this.draw = draw;
+    this.color = color;
+    this.size = size;
+  }
+
+  drag(pt: Point): void {
+    this.pos = pt; //stamp follows mouse until release
+  }
+
+  display(ctx: CanvasRenderingContext2D): void {
+    ctx.save();
+    ctx.translate(this.pos.x, this.pos.y); //move origin to spot where stamp is
+    this.draw(ctx, this.size, this.color);
+    ctx.restore();
+  }
+}
+
 //create an array to store each drawing mark
 const commands: DrawCmd[] = [];
 
