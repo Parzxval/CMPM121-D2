@@ -10,27 +10,38 @@ const SIN_A = Math.sin(FLOOR_ANGLE);
 type Shape3D = number[][][];
 
 //Perspective guide stamp
-const GUIDE_SHAPE: Shape3D = [
+export const GUIDE_SHAPE: Shape3D = [
   [[1, 0, 0], [0, 0, 0], [0, 1, 0]], //two lines for floor
   [[0, 0, 0], [0, 0, 1]], //wall corner going up in middle
 ];
 
 //3D cube stamp
-const CUBE_SHAPE: Shape3D = [
+export const CUBE_SHAPE: Shape3D = [
   [[0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1], [0, 0, 1]], //top face
   [[1, 0, 1], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]], //sides and bottom
   [[1, 1, 0], [1, 1, 1]], //front corner edge
 ];
 
 //Ramp 3d stamp; half of the cube stamp cut diagonally
-const RAMP_SHAPE: Shape3D = [
+export const RAMP_SHAPE: Shape3D = [
   [[0, 0, 1], [0, 1, 1], [1, 1, 0], [1, 0, 0], [0, 0, 1]], //slanted face
   [[0, 1, 1], [0, 1, 0], [1, 1, 0]], //triangle in front
 ];
 
 //Rectangular prism stamp; half the cube's height
-const HALF_CUBE_SHAPE: Shape3D = [
+export const HALF_CUBE_SHAPE: Shape3D = [
   [[0, 0, 0.5], [1, 0, 0.5], [1, 1, 0.5], [0, 1, 0.5], [0, 0, 0.5]],
   [[1, 0, 0.5], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, 0.5]],
   [[1, 1, 0], [1, 1, 0.5]],
 ];
+
+//Turns 3d corner into 2d offset on the canvas
+function project(corner: number[], size: number): { x: number; y: number } {
+  const x = corner[0];
+  const y = corner[1];
+  const z = corner[2];
+  return {
+    x: (x - y) * COS_A * size,
+    y: ((x + y) * SIN_A - z) * size,
+  };
+}
