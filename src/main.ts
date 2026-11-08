@@ -91,6 +91,25 @@ function redraw() {
 
 redraw();
 
+//interface to create different tools based on tool data
+interface ToolDef {
+  label: string; //button label
+  kind: "marker";
+  size: number;
+}
+
+const tools: ToolDef[] = [
+  { label: "Thin", kind: "marker", size: 2 },
+  { label: "Thick", kind: "marker", size: 8 },
+];
+
+let currentTool: ToolDef = tools[0];
+// deno-lint-ignore no-unused-vars
+let currentSize = currentTool.size;
+
+// deno-lint-ignore prefer-const no-unused-vars
+let currentColor = "000000";
+
 let currentStroke: MarkerStroke | null = null;
 
 canvas.addEventListener("pointerdown", (event) => {
@@ -183,3 +202,15 @@ function updateButtons() {
 }
 
 updateButtons();
+
+const toolButtons: HTMLButtonElement[] = [];
+
+// deno-lint-ignore no-unused-vars
+function selectTool(tool: ToolDef) {
+  currentTool = tool;
+  currentSize = tool.size; //For now, maps to the presets
+
+  for (let i = 0; i < tools.length; i++) {
+    toolButtons[i].classList.toggle("selected", tools[i] === tool);
+  }
+}
