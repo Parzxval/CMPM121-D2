@@ -205,7 +205,6 @@ updateButtons();
 
 const toolButtons: HTMLButtonElement[] = [];
 
-// deno-lint-ignore no-unused-vars
 function selectTool(tool: ToolDef) {
   currentTool = tool;
   currentSize = tool.size; //For now, maps to the presets
@@ -214,3 +213,17 @@ function selectTool(tool: ToolDef) {
     toolButtons[i].classList.toggle("selected", tools[i] === tool);
   }
 }
+
+function addToolButton(tool: ToolDef) {
+  const button = document.createElement("button");
+  button.textContent = tool.label;
+  button.addEventListener("click", () => selectTool(tool));
+  toolbar.append(button);
+  toolButtons.push(button);
+}
+
+for (let i = 0; i < tools.length; i++) {
+  addToolButton(tools[i]);
+}
+
+selectTool(tools[0]);
