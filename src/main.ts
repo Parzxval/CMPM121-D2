@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-unused-vars
 import "./style.css";
 import {
   CUBE_SHAPE,
@@ -217,6 +216,9 @@ let currentColor = "#000000";
 
 //creates the corresponding mark for the selected tool
 function createStroke(start: Point): DragCmd {
+  if (currentTool.kind === "stamp" && currentTool.draw !== undefined) {
+    return new StampMark(start, currentTool.draw, currentColor, currentSize);
+  }
   if (currentTool.kind === "line") {
     return new StraightLine(start, currentColor, currentSize);
   }
