@@ -54,7 +54,51 @@ colorInput.addEventListener("input", (event: Event) => {
 const toolbar = document.createElement("div");
 toolbar.className = "toolbar";
 
-layout.append(canvas, toolbar);
+const actionToolbar = document.createElement("div");
+actionToolbar.className = "action-toolbar";
+
+const canvasContainer = document.createElement("div");
+canvasContainer.className = "canvas-container";
+
+const brushTab = document.createElement("button");
+brushTab.textContent = "Brush";
+
+const lineTab = document.createElement("button");
+lineTab.textContent = "Line";
+
+const stampTab = document.createElement("button");
+stampTab.textContent = "Stamp";
+
+const settingsTab = document.createElement("button");
+settingsTab.textContent = "Settings";
+
+const optionsPanel = document.createElement("div");
+optionsPanel.className = "options-panel";
+
+const brushOptions = document.createElement("div");
+brushOptions.className = "option-group";
+
+const lineOptions = document.createElement("div");
+lineOptions.className = "option-group";
+
+const stampOptions = document.createElement("div");
+stampOptions.className = "option-group";
+
+const settingsOptions = document.createElement("div");
+settingsOptions.className = "option-group";
+
+toolbar.append(brushTab, lineTab, stampTab, settingsTab);
+brushTab.classList.add("selected"); //default selected tab
+
+optionsPanel.append(
+  brushOptions,
+  lineOptions,
+  stampOptions,
+  settingsOptions,
+);
+
+canvasContainer.append(actionToolbar, canvas);
+layout.append(toolbar, optionsPanel, canvasContainer);
 app.append(
   title,
   document.createTextNode("\t Current Color :   "),
@@ -170,7 +214,7 @@ clearButton.addEventListener("click", () => {
   redraw();
   updateButtons();
 });
-toolbar.append(clearButton);
+actionToolbar.append(clearButton);
 
 //undo button
 const undoButton = document.createElement("button");
@@ -180,7 +224,7 @@ undoButton.addEventListener("click", () => {
   redraw();
   updateButtons();
 });
-toolbar.append(undoButton);
+actionToolbar.append(undoButton);
 
 //redo button
 const redoButton = document.createElement("button");
@@ -190,7 +234,7 @@ redoButton.addEventListener("click", () => {
   redraw();
   updateButtons();
 });
-toolbar.append(redoButton);
+actionToolbar.append(redoButton);
 
 //disable undo and redo if there is nothing in stack
 function updateButtons() {
@@ -210,11 +254,11 @@ function selectTool(tool: ToolDef) {
   }
 }
 
-function addToolButton(tool: ToolDef) {
+function addToolButton(tool: ToolDef, container: HTMLElement) {
   const button = document.createElement("button");
   button.textContent = tool.label;
   button.addEventListener("click", () => selectTool(tool));
-  toolbar.append(button);
+  container.append(button);
   toolButtons.push(button);
 }
 
@@ -224,6 +268,7 @@ function createSizeSlider(
   max: number,
   initialValue: number,
   onChange: (value: number) => void,
+  container: HTMLElement,
 ) {
   const label = document.createElement("label");
   label.textContent = `${labelText}: `;
@@ -243,23 +288,70 @@ function createSizeSlider(
     valueDisplay.textContent = String(value);
   });
 
-  toolbar.append(label, slider, valueDisplay);
+  container.append(label, slider, valueDisplay);
+}
+
+function showOptions(group: HTMLElement, tab: HTMLButtonElement) {
+  // Hide every options group
+  brushOptions.style.display = "none";
+  lineOptions.style.display = "none";
+  stampOptions.style.display = "none";
+  settingsOptions.style.display = "none";
+
+  // Remove selected appearance from all tabs
+  brushTab.classList.remove("selected");
+  lineTab.classList.remove("selected");
+  stampTab.classList.remove("selected");
+  settingsTab.classList.remove("selected");
+
+  // Show the selected group
+  group.style.display = "flex";
+  tab.classList.add("selected");
 }
 
 for (let i = 0; i < tools.length; i++) {
-  addToolButton(tools[i]);
+  const tool = tools[i];
+
+  if (tool.kind === "marker") {
+    addToolButton(tool, brushOptions);
+  } else if (tool.kind === "line") {
+    addToolButton(tool, lineOptions);
+  } else if (tool.kind === "stamp") {
+    addToolButton(tool, stampOptions);
+  }
 }
 
 selectTool(tools[0]);
 
 createSizeSlider("Brush Size", 1, 20, brushSize, (value) => {
   brushSize = value;
-});
+}, brushOptions);
 
 createSizeSlider("Line Size", 1, 20, lineSize, (value) => {
   lineSize = value;
-});
+}, lineOptions);
 
 createSizeSlider("Stamp Size", 10, 200, stampSize, (value) => {
   stampSize = value;
+}, stampOptions);
+
+brushTab.addEventListener("click", () => {
+  selectTool(tools[0]);
+  showOptions(brushOptions, brushTab);
 });
+
+lineTab.addEventListener("click", () => {
+  selectTool(tools[1]);
+  showOptions(lineOptions, lineTab);
+});
+
+stampTab.addEventListener("click", () => {
+  selectTool(tools[2]);
+  showOptions(stampOptions, stampTab);
+});
+
+settingsTab.addEventListener("click", () => {
+  showOptions(settingsOptions, settingsTab);
+});
+
+showOptions(brushOptions, brushTab);
