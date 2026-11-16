@@ -79,10 +79,8 @@ interface ToolDef {
 }
 
 const tools: ToolDef[] = [
-  { label: "Thin", kind: "marker", size: 2 },
-  { label: "Thick", kind: "marker", size: 8 },
-  { label: "Thin Line", kind: "line", size: 2 },
-  { label: "Thick Line", kind: "line", size: 8 },
+  { label: "Brush", kind: "marker", size: 2 },
+  { label: "Line", kind: "line", size: 2 },
 
   //stamps
   {
@@ -111,18 +109,21 @@ const tools: ToolDef[] = [
   },
 ];
 
+let brushSize = 2; //default brush size
+let lineSize = 2; //default line size
+let stampSize = 60; //default stamp size
+
 let currentTool: ToolDef = tools[0];
-let currentSize = currentTool.size;
 
 //creates the corresponding mark for the selected tool
 function createStroke(start: Point): DragCmd {
   if (currentTool.kind === "stamp" && currentTool.draw !== undefined) {
-    return new StampMark(start, currentTool.draw, currentColor, currentSize);
+    return new StampMark(start, currentTool.draw, currentColor, stampSize);
   }
   if (currentTool.kind === "line") {
-    return new StraightLine(start, currentColor, currentSize);
+    return new StraightLine(start, currentColor, lineSize);
   }
-  return new MarkerStroke(start, currentColor, currentSize);
+  return new MarkerStroke(start, currentColor, brushSize);
 }
 
 let currentStroke: DragCmd | null = null;
@@ -203,7 +204,6 @@ const toolButtons: HTMLButtonElement[] = [];
 
 function selectTool(tool: ToolDef) {
   currentTool = tool;
-  currentSize = tool.size; //For now, maps to the presets
 
   for (let i = 0; i < tools.length; i++) {
     toolButtons[i].classList.toggle("selected", tools[i] === tool);
@@ -218,8 +218,48 @@ function addToolButton(tool: ToolDef) {
   toolButtons.push(button);
 }
 
+function createSizeSlider(
+  labelText: string,
+  min: number,
+  max: number,
+  initialValue: number,
+  onChange: (value: number) => void,
+) {
+  const label = document.createElement("label");
+  label.textContent = `${labelText}: `;
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = min.toString();
+  slider.max = max.toString();
+  slider.value = String(initialValue);
+
+  const valueDisplay = document.createElement("span");
+  valueDisplay.textContent = String(initialValue);
+
+  slider.addEventListener("input", () => {
+    const value = Number(slider.value);
+    onChange(value);
+    valueDisplay.textContent = String(value);
+  });
+
+  toolbar.append(label, slider, valueDisplay);
+}
+
 for (let i = 0; i < tools.length; i++) {
   addToolButton(tools[i]);
 }
 
 selectTool(tools[0]);
+
+createSizeSlider("Brush Size", 1, 20, brushSize, (value) => {
+  brushSize = value;
+});
+
+createSizeSlider("Line Size", 1, 20, lineSize, (value) => {
+  lineSize = value;
+});
+
+createSizeSlider("Stamp Size", 10, 200, stampSize, (value) => {
+  stampSize = value;
+});

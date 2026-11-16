@@ -1,4 +1,4 @@
-/* 
+/*
   Manages drawing history, including undo and redo functionality,
   as well as adding and removing drawing commands.
 */
