@@ -229,7 +229,6 @@ const tools: ToolDef[] = [
 
 let currentTool: ToolDef = tools[0];
 let currentSize = currentTool.size;
-// deno-lint-ignore prefer-const
 
 //creates the corresponding mark for the selected tool
 function createStroke(start: Point): DragCmd {
