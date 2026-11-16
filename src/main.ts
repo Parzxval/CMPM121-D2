@@ -20,11 +20,29 @@ const canvas = document.createElement("canvas");
 canvas.width = 750;
 canvas.height = 750;
 
+let currentColor = "#000000"; //Default color is black
+
+//Color picker for brushes and stamps
+const colorInput = document.createElement("input");
+colorInput.type = "color";
+colorInput.value = currentColor;
+document.body.append(colorInput);
+
+colorInput.addEventListener("input", (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  currentColor = target.value;
+});
+
 const toolbar = document.createElement("div");
 toolbar.className = "toolbar";
 
 layout.append(canvas, toolbar);
-app.append(title, layout);
+app.append(
+  title,
+  document.createTextNode("\t Current Color :   "),
+  colorInput,
+  layout,
+);
 
 const ctx = canvas.getContext("2d")!;
 
@@ -212,7 +230,6 @@ const tools: ToolDef[] = [
 let currentTool: ToolDef = tools[0];
 let currentSize = currentTool.size;
 // deno-lint-ignore prefer-const
-let currentColor = "#000000";
 
 //creates the corresponding mark for the selected tool
 function createStroke(start: Point): DragCmd {
