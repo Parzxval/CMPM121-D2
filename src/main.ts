@@ -104,15 +104,23 @@ app.append(
 const ctx = canvas.getContext("2d")!;
 
 let currentStroke: DragCmd | null = null;
+let hoverPoint: Point | null = null;
 
 function redraw() {
   render(ctx, commands, canvas.width, canvas.height);
   if (currentStroke !== null) {
     currentStroke.display(ctx);
   }
+  if (
+    currentStroke === null && hoverPoint !== null &&
+    currentTool.kind === "stamp"
+  ) {
+    ctx.save();
+    ctx.globalAlpha = 0.4;
+    createStroke(hoverPoint).display(ctx);
+    ctx.restore();
+  }
 }
-
-redraw();
 
 //interface to create different tools based on tool data
 interface ToolDef {
@@ -189,6 +197,8 @@ canvas.addEventListener("pointerdown", (event) => {
 
 canvas.addEventListener("pointermove", (event) => {
   if (currentStroke === null) {
+    hoverPoint = { x: event.offsetX, y: event.offsetY };
+    redraw();
     return;
   }
   currentStroke.drag({ x: event.offsetX, y: event.offsetY });
@@ -202,6 +212,12 @@ canvas.addEventListener("pointerup", () => {
   addCommand(currentStroke);
   currentStroke = null;
   updateButtons();
+});
+
+//Prevents stamp previews from sitting on corner of canvas when mouse leaves canvas
+canvas.addEventListener("pointerleave", () => {
+  hoverPoint = null;
+  redraw();
 });
 
 //throw away stroke on browser interrupt
@@ -372,3 +388,5 @@ settingsTab.addEventListener("click", () => {
 });
 
 showOptions(brushOptions, brushTab);
+
+redraw();
