@@ -320,6 +320,38 @@ function createSizeSlider(
   container.append(label, slider, valueDisplay);
 }
 
+function createNumberInput(
+  labelText: string,
+  min: number,
+  max: number,
+  initialValue: number,
+  onChange: (value: number) => void,
+  container: HTMLElement,
+) {
+  const label = document.createElement("label");
+  label.textContent = `${labelText}: `;
+
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = min.toString();
+  input.max = max.toString();
+  input.value = String(initialValue);
+
+  let lastValid = initialValue;
+
+  input.addEventListener("change", () => {
+    const value = Number(input.value);
+    if (Number.isNaN(value) || value < min || value > max) {
+      input.value = lastValid.toString();
+    } else {
+      lastValid = value;
+      onChange(value);
+    }
+  });
+
+  container.append(label, input);
+}
+
 function showOptions(group: HTMLElement, tab: HTMLButtonElement) {
   // Hide every options group
   brushOptions.style.display = "none";
@@ -367,6 +399,16 @@ createSizeSlider("Stamp Size", 10, 200, stampSize, (value) => {
 createSizeSlider("Stamp Line Size", 1, 20, stampLineWidth, (value) => {
   stampLineWidth = value;
 }, stampOptions);
+
+createNumberInput("Width", 200, 2000, canvas.width, (value) => {
+  canvas.width = value;
+  redraw();
+}, settingsOptions);
+
+createNumberInput("Height", 200, 2000, canvas.height, (value) => {
+  canvas.height = value;
+  redraw();
+}, settingsOptions);
 
 brushTab.addEventListener("click", () => {
   selectTool(tools[0]);
