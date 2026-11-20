@@ -14,6 +14,9 @@ import { MarkerStroke, StampMark, StraightLine } from "./drawing/strokes.ts";
 //Clear functionality
 import { ClearCmd } from "./clear.ts";
 
+//Export functionality
+import { exportPNG } from "./export.ts";
+
 //Shared Types
 import type { DragCmd, Point, StampDraw } from "./drawing/types.ts";
 
@@ -264,6 +267,14 @@ redoButton.addEventListener("click", () => {
   updateButtons();
 });
 actionToolbar.append(redoButton);
+
+//export button
+const exportButton = document.createElement("button");
+exportButton.textContent = "Export";
+exportButton.addEventListener("click", () => {
+  exportPNG(commands, canvas.width, canvas.height, 2);
+});
+actionToolbar.append(exportButton);
 
 //disable undo and redo if there is nothing in stack
 function updateButtons() {
