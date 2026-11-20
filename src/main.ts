@@ -11,19 +11,14 @@ import {
 import { render } from "./drawing/canvas.ts";
 import { MarkerStroke, StampMark, StraightLine } from "./drawing/strokes.ts";
 
+//Clear functionality
+import { ClearCmd } from "./clear.ts";
+
 //Shared Types
 import type { DragCmd, Point, StampDraw } from "./drawing/types.ts";
 
 //Drawing History
-import {
-  addCommand,
-  clearHistory,
-  commands,
-  redo,
-  redoStack,
-  removeCommand,
-  undo,
-} from "./history.ts";
+import { addCommand, commands, redo, redoStack, undo } from "./history.ts";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 
@@ -108,8 +103,13 @@ app.append(
 
 const ctx = canvas.getContext("2d")!;
 
+let currentStroke: DragCmd | null = null;
+
 function redraw() {
   render(ctx, commands, canvas.width, canvas.height);
+  if (currentStroke !== null) {
+    currentStroke.display(ctx);
+  }
 }
 
 redraw();
@@ -181,12 +181,9 @@ function createStroke(start: Point): DragCmd {
   return new MarkerStroke(start, currentColor, brushSize);
 }
 
-let currentStroke: DragCmd | null = null;
-
 canvas.addEventListener("pointerdown", (event) => {
   canvas.setPointerCapture(event.pointerId);
   currentStroke = createStroke({ x: event.offsetX, y: event.offsetY });
-  addCommand(currentStroke);
   redraw();
 });
 
@@ -202,7 +199,7 @@ canvas.addEventListener("pointerup", () => {
   if (currentStroke === null) {
     return;
   }
-  redoStack.length = 0; //reset branch for a new line drawing
+  addCommand(currentStroke);
   currentStroke = null;
   updateButtons();
 });
@@ -210,7 +207,6 @@ canvas.addEventListener("pointerup", () => {
 //throw away stroke on browser interrupt
 canvas.addEventListener("pointercancel", () => {
   if (currentStroke !== null) {
-    removeCommand(currentStroke);
     currentStroke = null;
     redraw();
   }
@@ -220,10 +216,16 @@ canvas.addEventListener("pointercancel", () => {
 const clearButton = document.createElement("button");
 clearButton.textContent = "Clear";
 clearButton.addEventListener("click", () => {
-  clearHistory();
-  currentStroke = null;
-  redraw();
-  updateButtons();
+  //double-clear guard
+  if (
+    commands.length !== 0 &&
+    !(commands[commands.length - 1] instanceof ClearCmd)
+  ) {
+    addCommand(new ClearCmd());
+    currentStroke = null;
+    redraw();
+    updateButtons();
+  }
 });
 actionToolbar.append(clearButton);
 

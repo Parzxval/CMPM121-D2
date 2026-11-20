@@ -13,6 +13,7 @@ export const redoStack: DrawCmd[] = [];
 
 export function addCommand(command: DrawCmd) {
   commands.push(command);
+  redoStack.length = 0;
 }
 
 export function undo() {
@@ -29,18 +30,6 @@ export function redo() {
   }
   const cmd = redoStack.pop()!;
   commands.push(cmd);
-}
-
-export function clearHistory() {
-  commands.length = 0;
-  redoStack.length = 0;
-}
-
-export function removeCommand(command: DrawCmd) {
-  const index = commands.indexOf(command);
-  if (index !== -1) {
-    commands.splice(index, 1);
-  }
 }
 
 ///////////////////////
