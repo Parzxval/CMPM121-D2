@@ -1,6 +1,7 @@
 import "./style.css";
 import {
   CUBE_SHAPE,
+  DEFAULT_FLOOR_ANGLE,
   drawShape,
   GUIDE_SHAPE,
   HALF_CUBE_SHAPE,
@@ -142,29 +143,29 @@ const tools: ToolDef[] = [
     label: "Perspective Stamp",
     kind: "stamp",
     size: 80,
-    draw: (ctx, size, color, lineWidth) =>
-      drawShape(ctx, GUIDE_SHAPE, size, color, lineWidth),
+    draw: (ctx, size, color, lineWidth, angle) =>
+      drawShape(ctx, GUIDE_SHAPE, size, color, lineWidth, angle),
   },
   {
     label: "Cube Stamp",
     kind: "stamp",
     size: 60,
-    draw: (ctx, size, color, lineWidth) =>
-      drawShape(ctx, CUBE_SHAPE, size, color, lineWidth),
+    draw: (ctx, size, color, lineWidth, angle) =>
+      drawShape(ctx, CUBE_SHAPE, size, color, lineWidth, angle),
   },
   {
     label: "Ramp Stamp",
     kind: "stamp",
     size: 60,
-    draw: (ctx, size, color, lineWidth) =>
-      drawShape(ctx, RAMP_SHAPE, size, color, lineWidth),
+    draw: (ctx, size, color, lineWidth, angle) =>
+      drawShape(ctx, RAMP_SHAPE, size, color, lineWidth, angle),
   },
   {
     label: "Half-Cube Stamp",
     kind: "stamp",
     size: 60,
-    draw: (ctx, size, color, lineWidth) =>
-      drawShape(ctx, HALF_CUBE_SHAPE, size, color, lineWidth),
+    draw: (ctx, size, color, lineWidth, angle) =>
+      drawShape(ctx, HALF_CUBE_SHAPE, size, color, lineWidth, angle),
   },
 ];
 
@@ -172,6 +173,7 @@ let brushSize = 2; //default brush size
 let lineSize = 2; //default line size
 let stampSize = 60; //default stamp size
 let stampLineWidth = 2; //default stamp line width
+let floorAngle = DEFAULT_FLOOR_ANGLE;
 
 let currentTool: ToolDef = tools[0];
 
@@ -184,6 +186,7 @@ function createStroke(start: Point): DragCmd {
       currentColor,
       stampSize,
       stampLineWidth,
+      floorAngle,
     );
   }
   if (currentTool.kind === "line") {
@@ -410,6 +413,10 @@ createSizeSlider("Stamp Size", 10, 200, stampSize, (value) => {
 createSizeSlider("Stamp Line Size", 1, 20, stampLineWidth, (value) => {
   stampLineWidth = value;
 }, stampOptions);
+
+createSizeSlider("Floor Angle (°)", 1, 45, 30, (value) => {
+  floorAngle = value * Math.PI / 180; //deg to rad
+}, settingsOptions);
 
 createNumberInput("Width", 200, 2000, canvas.width, (value) => {
   canvas.width = value;

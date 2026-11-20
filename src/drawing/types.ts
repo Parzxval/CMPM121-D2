@@ -21,4 +21,5 @@ export type StampDraw = (
   size: number,
   color: string,
   lineWidth: number,
+  angle: number,
 ) => void;

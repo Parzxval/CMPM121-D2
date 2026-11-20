@@ -78,6 +78,7 @@ export class StampMark implements DragCmd {
   private color: string;
   private size: number;
   private lineWidth: number;
+  private angle: number;
 
   constructor(
     pos: Point,
@@ -85,12 +86,14 @@ export class StampMark implements DragCmd {
     color: string,
     size: number,
     lineWidth: number,
+    angle: number,
   ) {
     this.pos = pos;
     this.draw = draw;
     this.color = color;
     this.size = size;
     this.lineWidth = lineWidth;
+    this.angle = angle;
   }
 
   drag(pt: Point): void {
@@ -100,7 +103,7 @@ export class StampMark implements DragCmd {
   display(ctx: CanvasRenderingContext2D): void {
     ctx.save();
     ctx.translate(this.pos.x, this.pos.y); //move origin to spot where stamp is
-    this.draw(ctx, this.size, this.color, this.lineWidth);
+    this.draw(ctx, this.size, this.color, this.lineWidth, this.angle);
     ctx.restore();
   }
 }

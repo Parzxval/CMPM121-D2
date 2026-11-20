@@ -1,9 +1,5 @@
-//3D shape stamps; floor lines are 30 degrees below horizontal for all
-//changing FLOOR_ANGLE will tilt the shape stamps and guide stamp together
-//TODO: Add an angle slider for FLOOR_ANGLE
-const FLOOR_ANGLE = Math.PI / 6;
-const COS_A = Math.cos(FLOOR_ANGLE);
-const SIN_A = Math.sin(FLOOR_ANGLE);
+//3D shape stamps; default floor lines are 30 degrees below horizontal for all
+export const DEFAULT_FLOOR_ANGLE = Math.PI / 6;
 
 //List of 3d shapes consisting of 3 lines that make up each shape; each line consists of 3 points (x, y, z)
 type Shape3D = number[][][];
@@ -35,13 +31,17 @@ export const HALF_CUBE_SHAPE: Shape3D = [
 ];
 
 //Turns 3d corner into 2d offset on the canvas
-function project(corner: number[], size: number): { x: number; y: number } {
+function project(
+  corner: number[],
+  size: number,
+  angle: number,
+): { x: number; y: number } {
   const x = corner[0];
   const y = corner[1];
   const z = corner[2];
   return {
-    x: (x - y) * COS_A * size,
-    y: ((x + y) * SIN_A - z) * size,
+    x: (x - y) * Math.cos(angle) * size,
+    y: ((x + y) * Math.sin(angle) - z) * size,
   };
 }
 
@@ -52,6 +52,7 @@ export function drawShape(
   size: number,
   color: string,
   lineWidth: number,
+  angle: number,
 ) {
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
@@ -60,12 +61,12 @@ export function drawShape(
 
   for (let i = 0; i < shape.length; i++) {
     const line = shape[i];
-    const first = project(line[0], size);
+    const first = project(line[0], size, angle);
     ctx.beginPath();
     ctx.moveTo(first.x, first.y);
 
     for (let a = 1; a < line.length; a++) {
-      const pt = project(line[a], size);
+      const pt = project(line[a], size, angle);
       ctx.lineTo(pt.x, pt.y);
     }
     ctx.stroke();
