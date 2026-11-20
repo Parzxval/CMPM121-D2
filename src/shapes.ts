@@ -56,7 +56,7 @@ export function drawShape(
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.lineCap = "round";
-  ctx.lineJoin = "round";
+  ctx.lineJoin = "bevel";
 
   for (let i = 0; i < shape.length; i++) {
     const line = shape[i];
