@@ -51,9 +51,10 @@ export function drawShape(
   shape: Shape3D,
   size: number,
   color: string,
+  lineWidth: number,
 ) {
   ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
+  ctx.lineWidth = lineWidth;
   ctx.lineCap = "round";
 
   for (let i = 0; i < shape.length; i++) {

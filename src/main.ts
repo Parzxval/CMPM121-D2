@@ -131,38 +131,49 @@ const tools: ToolDef[] = [
     label: "Perspective Stamp",
     kind: "stamp",
     size: 80,
-    draw: (ctx, size, color) => drawShape(ctx, GUIDE_SHAPE, size, color),
+    draw: (ctx, size, color, lineWidth) =>
+      drawShape(ctx, GUIDE_SHAPE, size, color, lineWidth),
   },
   {
     label: "Cube Stamp",
     kind: "stamp",
     size: 60,
-    draw: (ctx, size, color) => drawShape(ctx, CUBE_SHAPE, size, color),
+    draw: (ctx, size, color, lineWidth) =>
+      drawShape(ctx, CUBE_SHAPE, size, color, lineWidth),
   },
   {
     label: "Ramp Stamp",
     kind: "stamp",
     size: 60,
-    draw: (ctx, size, color) => drawShape(ctx, RAMP_SHAPE, size, color),
+    draw: (ctx, size, color, lineWidth) =>
+      drawShape(ctx, RAMP_SHAPE, size, color, lineWidth),
   },
   {
     label: "Half-Cube Stamp",
     kind: "stamp",
     size: 60,
-    draw: (ctx, size, color) => drawShape(ctx, HALF_CUBE_SHAPE, size, color),
+    draw: (ctx, size, color, lineWidth) =>
+      drawShape(ctx, HALF_CUBE_SHAPE, size, color, lineWidth),
   },
 ];
 
 let brushSize = 2; //default brush size
 let lineSize = 2; //default line size
 let stampSize = 60; //default stamp size
+let stampLineWidth = 2; //default stamp line width
 
 let currentTool: ToolDef = tools[0];
 
 //creates the corresponding mark for the selected tool
 function createStroke(start: Point): DragCmd {
   if (currentTool.kind === "stamp" && currentTool.draw !== undefined) {
-    return new StampMark(start, currentTool.draw, currentColor, stampSize);
+    return new StampMark(
+      start,
+      currentTool.draw,
+      currentColor,
+      stampSize,
+      stampLineWidth,
+    );
   }
   if (currentTool.kind === "line") {
     return new StraightLine(start, currentColor, lineSize);
@@ -333,6 +344,10 @@ createSizeSlider("Line Size", 1, 20, lineSize, (value) => {
 
 createSizeSlider("Stamp Size", 10, 200, stampSize, (value) => {
   stampSize = value;
+}, stampOptions);
+
+createSizeSlider("Stamp Line Size", 1, 20, stampLineWidth, (value) => {
+  stampLineWidth = value;
 }, stampOptions);
 
 brushTab.addEventListener("click", () => {

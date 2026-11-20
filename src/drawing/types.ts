@@ -20,4 +20,5 @@ export type StampDraw = (
   ctx: CanvasRenderingContext2D,
   size: number,
   color: string,
+  lineWidth: number,
 ) => void;
